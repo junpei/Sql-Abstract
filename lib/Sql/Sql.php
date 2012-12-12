@@ -11,6 +11,8 @@ abstract class Sql
 
     private $limit;
     private $offset;
+    private $wheres = array();
+    private $values = array();
 
     public function __construct() {
         return $this;
@@ -33,6 +35,13 @@ abstract class Sql
         $sql = "SELECT $columns FROM $table AS $alias";
 
         /**
+         * WHERE
+         */
+        if (count($this->wheres) > 0) {
+            $sql .= sprintf(' WHERE (%s)', implode(' AND ', $this->wheres));
+        }
+
+        /**
          * LIMIT
          */
         if ($this->limit > -1) {
@@ -49,8 +58,51 @@ abstract class Sql
         return $sql;
     }
 
-    public function where() {
+    public function where($column, $op, $value = null) {
+        if (is_null($value)) {
+            $value = $op;
+            $op = '=';
+        }
+
+        if (is_array($value)) {
+            $op = 'IN';
+            $values = array();
+
+            foreach ($value as $v) {
+                if (is_int($v)) {
+                    $values[] = $v;
+                }
+
+                else {
+                    $values[] = '?';
+                    $this->values[] = $v;
+                }
+            }
+
+            $this->wheres[] = sprintf("($column $op (%s))", implode(', ', $values));
+        }
+
+        else if (is_int($value)) {
+            $this->wheres[] = "($column $op $value)";
+        }
+
+        else {
+            $this->wheres[] = "($column $op ?)";
+            $this->values[] = $value;
+        }
+
         return $this;
+    }
+
+    public function wheres($wheres) {
+        foreach ($wheres as $where) {
+            call_user_func_array(array($this, 'where'), $where);
+        }
+        return $this;
+    }
+
+    public function values() {
+        return $this->values;
     }
 
     public function limit($n) {
