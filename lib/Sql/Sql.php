@@ -66,6 +66,10 @@ abstract class Sql
         return $sql;
     }
 
+    public function selectOne() {
+        return $this->limit(1)->offset(0)->select();
+    }
+
     public function where($column, $op, $value = null) {
         if (is_null($value)) {
             $value = $op;
