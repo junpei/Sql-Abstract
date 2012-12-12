@@ -8,6 +8,12 @@
     print($sql->from('tables')->alias('t')->limit(8)->offset(0)->select());
     // SELECT * FROM tables AS t LIMIT 8 OFFSET 0
 
+    print($sql->from('tables')->alias('t')->order('col0')->select());
+    // SELECT * FROM tables AS t ORDER BY col0 ASC
+
+    print($sql->from('tables')->alias('t')->order('col0', 'desc')->select());
+    // SELECT * FROM tables AS t ORDER BY col0 DESC
+
     print($sql->from('tables')->where('col0', 1)->select());
     // SELECT * FROM tables AS me WHERE col0 = 1
 

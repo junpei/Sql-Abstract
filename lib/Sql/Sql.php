@@ -13,6 +13,7 @@ abstract class Sql
     private $offset;
     private $wheres = array();
     private $values = array();
+    private $orders = array();
 
     public function __construct() {
         return $this;
@@ -39,6 +40,13 @@ abstract class Sql
          */
         if (count($this->wheres) > 0) {
             $sql .= sprintf(' WHERE (%s)', implode(' AND ', $this->wheres));
+        }
+
+        /**
+         * ORDER
+         */
+        if (count($this->orders) > 0) {
+            $sql .= sprintf(' ORDER BY %s', implode(', ', $this->orders));
         }
 
         /**
@@ -103,6 +111,12 @@ abstract class Sql
 
     public function values() {
         return $this->values;
+    }
+
+    public function order($column, $order = null) {
+        $order = (strtolower($order) === 'desc') ? 'DESC' : 'ASC';
+        $this->orders[] = "$column $order";
+        return $this;
     }
 
     public function limit($n) {
