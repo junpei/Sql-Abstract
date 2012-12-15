@@ -74,3 +74,29 @@
 
     $sql->offset(8)->select();
     // SELECT * FROM tables AS t OFFSET 8
+
+### UPDATE
+
+    $sql->update()
+    // UPDATE tables
+
+### SET
+
+    $sql->set('col0', 1)->update();
+    // UPDATE tables SET col0 = 1
+
+    $sql->set('col0', 'a')->update();
+    $sql->values();
+    // UPDATE tables SET col0 = ?
+    // Array
+    // (
+    //   [0] => a
+    // )
+
+    $sql->set(array(array('col0', 'a'), array('col1', 1)))->update();
+    $sql->values();
+    // UPDATE tables SET col0 = ?, col1 = 1
+    // Array
+    // (
+    //   [0] => a
+    // )

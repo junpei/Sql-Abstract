@@ -14,6 +14,7 @@ abstract class Sql
     private $wheres = array();
     private $values = array();
     private $orders = array();
+    private $sets = array();
 
     public function __construct() {
         return $this;
@@ -137,5 +138,46 @@ abstract class Sql
         }
         $this->offset = $n;
         return $this;
+    }
+
+    public function set($column, $value) {
+        if (is_int($value)) {
+            $this->sets[] = "($column = $value)";
+        }
+
+        else {
+            $this->sets[] = "($column = ?)";
+            $this->values[] = $value;
+        }
+
+        return $this;
+    }
+
+    public function sets($sets) {
+        foreach ($sets as $set) {
+            call_user_func_array(array($this, 'set'), $set);
+        }
+        return $this;
+    }
+
+    public function update() {
+        $table = $this->table ?: get_class($this);
+        $sql = "UPDATE $table";
+
+        /**
+         * SET
+         */
+        if (count($this->sets) > 0) {
+            $sql .= sprintf(' SET (%s)', implode(', ', $this->sets));
+        }
+
+        /**
+         * WHERE
+         */
+        if (count($this->wheres) > 0) {
+            $sql .= sprintf(' WHERE (%s)', implode(' AND ', $this->wheres));
+        }
+
+        return $sql;
     }
 }
