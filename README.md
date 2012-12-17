@@ -100,3 +100,8 @@
     // (
     //   [0] => a
     // )
+
+### DELETE
+
+    $sql->delete();
+    // DELETE FROM tables;

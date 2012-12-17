@@ -199,4 +199,18 @@ abstract class Sql
 
         return $sql;
     }
+
+    public function delete() {
+        $table = $this->table ?: get_class($this);
+        $sql = "DELETE FROM $table";
+
+        /**
+         * WHERE
+         */
+        if (count($this->wheres) > 0) {
+            $sql .= sprintf(' WHERE (%s)', implode(' AND ', $this->wheres));
+        }
+
+        return $sql;
+    }
 }
