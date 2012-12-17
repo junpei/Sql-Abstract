@@ -114,6 +114,25 @@ abstract class Sql
         return $this;
     }
 
+    public function orWheres($values) {
+        $wheres = array();
+
+        foreach ($values as $column => $value) {
+            if (is_int($value)) {
+                $wheres[] = "($column = $value)";
+            }
+
+            else {
+                $wheres[] = "($column = ?)";
+                $this->values[] = $value;
+            }
+        }
+
+        $this->wheres[] = implode(' OR ', $wheres);
+
+        return $this;
+    }
+
     public function values() {
         return $this->values;
     }
