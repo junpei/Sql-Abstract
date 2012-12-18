@@ -15,6 +15,7 @@ abstract class Sql
     private $values = array();
     private $orders = array();
     private $sets = array();
+    private $columns = array();
 
     public function __construct() {
         return $this;
@@ -30,8 +31,33 @@ abstract class Sql
         return $this;
     }
 
+    public function column($function, $column = null) {
+        if (is_null($column)) {
+            $column = $function;
+            unset($function);
+        }
+
+        if (preg_match('/\./', $column) === 0) {
+            $column = "{$this->alias}.$column";
+        }
+
+        $allows = array(
+            'MIN' => true,
+            'MAX' => true,
+            'COUNT' => true,
+        );
+
+        if (isset($function) && $allows[$function]) {
+            $column = "$function($column)";
+        }
+
+        $this->columns[] = $column;
+
+        return $this;
+    }
+
     public function select() {
-        $columns = '*';
+        $columns = implode(', ', $this->columns) ?: '*';
         $table = $this->table ?: get_class($this);
         $alias = $this->alias ?: 'me';
         $sql = "SELECT $columns FROM $table AS $alias";

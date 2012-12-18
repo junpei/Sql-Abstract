@@ -27,6 +27,12 @@
     $sql->select();
     // SELECT * FROM tables AS t
 
+    $sql->column('col0')->select();
+    // SELECT t.col0 FROM tables AS t
+
+    $sql->column('COUNT', 'col0')->select();
+    // SELECT COUNT(t.col0) FROM tables AS t
+
 ### WHERE
 
     $sql->where('col0', 1)->select();
