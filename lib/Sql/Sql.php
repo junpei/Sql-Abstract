@@ -161,15 +161,15 @@ abstract class Sql
 
     public function set($column, $value) {
         if (is_null($value)) {
-            $this->sets[] = "($column = NULL)";
+            $this->sets[] = "$column = NULL";
         }
 
         else if (is_int($value)) {
-            $this->sets[] = "($column = $value)";
+            $this->sets[] = "$column = $value";
         }
 
         else {
-            $this->sets[] = "($column = ?)";
+            $this->sets[] = "$column = ?";
             $this->values[] = $value;
         }
 
@@ -191,7 +191,7 @@ abstract class Sql
          * SET
          */
         if (count($this->sets) > 0) {
-            $sql .= sprintf(' SET (%s)', implode(', ', $this->sets));
+            $sql .= sprintf(' SET %s', implode(', ', $this->sets));
         }
 
         /**
