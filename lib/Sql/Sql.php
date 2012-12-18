@@ -213,4 +213,32 @@ abstract class Sql
 
         return $sql;
     }
+
+    public function insert($data) {
+        $keys = array();
+        $values = array();
+
+        foreach ($data as $key => $value) {
+            if (is_null($value)) {
+                $value = 'NULL';
+            }
+
+            else if (is_int($value) === false) {
+                $this->values[] = $value;
+                $value = '?';
+            }
+
+            $keys[] = $key;
+            $values[] = $value;
+        }
+
+        $sql = sprintf(
+            'INSERT INTO %s (%s) VALUES (%s)'
+            , $this->table ?: get_class($this)
+            , implode(', ', $keys)
+            , implode(', ', $values)
+        );
+
+        return $sql;
+    }
 }

@@ -105,3 +105,16 @@
 
     $sql->delete();
     // DELETE FROM tables;
+
+### INSERT
+
+    $sql->insert(array('col0' => 1));
+    // INSERT INTO tables (col0) VALUES (1)
+
+    $sql->insert(array('col0' => 'a'));
+    $sql->values();
+    // INSERT INTO tables (col0) VALUES (?)
+    // Array
+    // (
+    //   [0] => a
+    // )
