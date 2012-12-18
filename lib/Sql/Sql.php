@@ -160,7 +160,11 @@ abstract class Sql
     }
 
     public function set($column, $value) {
-        if (is_int($value)) {
+        if (is_null($value)) {
+            $this->sets[] = "($column = NULL)";
+        }
+
+        else if (is_int($value)) {
             $this->sets[] = "($column = $value)";
         }
 
