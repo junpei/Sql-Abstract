@@ -30,8 +30,14 @@
     $sql->column('col0')->select();
     // SELECT t.col0 FROM tables AS t
 
+    $sql->column(array('col0', 'z'))->select();
+    // SELECT t.col0 AS z FROM tables AS t
+
     $sql->column('COUNT', 'col0')->select();
     // SELECT COUNT(t.col0) FROM tables AS t
+
+    $sql->column('COUNT', array('col0', 'z'))->select();
+    // SELECT COUNT(t.col0) AS z FROM tables AS t
 
 ### WHERE
 

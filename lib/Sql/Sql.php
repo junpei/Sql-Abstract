@@ -31,24 +31,53 @@ abstract class Sql
         return $this;
     }
 
-    public function column($function, $column = null) {
-        if (is_null($column)) {
-            $column = $function;
-            unset($function);
+    public function column() {
+        $function;
+        $column;
+        $alias;
+
+        /**
+         * arguments
+         */
+        if (func_num_args() === 2) {
+            $function = func_get_arg(0);
+            $column = func_get_arg(1);
         }
 
+        else {
+            $column = func_get_arg(0);
+        }
+
+        /**
+         * alias
+         */
+        if (is_array($column)) {
+            $alias = $column[1];
+            $column = $column[0];
+        }
+
+        /**
+         * column
+         */
         if (preg_match('/\./', $column) === 0) {
             $column = "{$this->alias}.$column";
         }
 
+        /**
+         * function
+         */
         $allows = array(
             'MIN' => true,
             'MAX' => true,
             'COUNT' => true,
         );
 
-        if (isset($function) && $allows[$function]) {
+        if (@$allows[$function]) {
             $column = "$function($column)";
+        }
+
+        if (isset($alias)) {
+            $column .= " AS $alias";
         }
 
         $this->columns[] = $column;
