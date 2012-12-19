@@ -279,11 +279,14 @@ abstract class Sql
         return $sql;
     }
 
-    public function insert($data) {
+    public function insert() {
         $keys = array();
         $values = array();
 
-        foreach ($data as $key => $value) {
+        /**
+         * SET
+         */
+        foreach ($this->sets as $key => $value) {
             if (is_null($value)) {
                 $value = 'NULL';
             }
