@@ -16,6 +16,7 @@ abstract class Sql
     private $orders = array();
     private $sets = array();
     private $columns = array();
+    private $inserts = array();
 
     public function __construct() {
         return $this;
@@ -215,19 +216,7 @@ abstract class Sql
     }
 
     public function set($column, $value) {
-        if (is_null($value)) {
-            $this->sets[] = "$column = NULL";
-        }
-
-        else if (is_int($value)) {
-            $this->sets[] = "$column = $value";
-        }
-
-        else {
-            $this->sets[] = "$column = ?";
-            $this->values[] = $value;
-        }
-
+        $this->sets[$column] = $value;
         return $this;
     }
 
@@ -245,8 +234,25 @@ abstract class Sql
         /**
          * SET
          */
-        if (count($this->sets) > 0) {
-            $sql .= sprintf(' SET %s', implode(', ', $this->sets));
+        $sets = array();
+
+        foreach ($this->sets as $column => $value) {
+            if (is_null($value)) {
+                $sets[] = "$column = NULL";
+            }
+
+            else if (is_int($value)) {
+                $sets[] = "$column = $value";
+            }
+
+            else {
+                $sets[] = "$column = ?";
+                $this->values[] = $value;
+            }
+        }
+
+        if (count($sets) > 0) {
+            $sql .= sprintf(' SET %s', implode(', ', $sets));
         }
 
         /**
