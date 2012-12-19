@@ -120,10 +120,10 @@
 
 ### INSERT
 
-    $sql->insert(array('col0' => 1));
+    $sql->set('col0', 1)->insert();
     // INSERT INTO tables (col0) VALUES (1)
 
-    $sql->insert(array('col0' => 'a'));
+    $sql->set('col0', 'a')->insert();
     $sql->values();
     // INSERT INTO tables (col0) VALUES (?)
     // Array
