@@ -2,6 +2,7 @@
 
 namespace Sql;
 
+require_once 'Join.php';
 require_once 'Exception.php';
 
 abstract class Sql
@@ -17,18 +18,28 @@ abstract class Sql
     private $sets = array();
     private $columns = array();
     private $inserts = array();
+    private $joins = array();
+    private $join;
 
     public function __construct() {
         return $this;
     }
 
-    public function from($table) {
-        $this->table = $table;
+    public function from() {
+        if (func_num_args() === 0) {
+            return $this->table;
+        }
+
+        $this->table = func_get_arg(0);
         return $this;
     }
 
-    public function alias($alias) {
-        $this->alias = $alias;
+    public function alias() {
+        if (func_num_args() === 0) {
+            return $this->alias;
+        }
+
+        $this->alias = func_get_arg(0);
         return $this;
     }
 
@@ -91,6 +102,13 @@ abstract class Sql
         $table = $this->table ?: get_class($this);
         $alias = $this->alias ?: 'me';
         $sql = "SELECT $columns FROM $table AS $alias";
+
+        /**
+         * JOIN
+         */
+        if (count($this->joins) > 0) {
+            $sql .= ' ' . implode(' ', $this->joins);
+        }
 
         /**
          * WHERE
@@ -308,5 +326,40 @@ abstract class Sql
         );
 
         return $sql;
+    }
+
+    public function inner() {
+        require_once 'Join/Inner.php';
+        $this->join = '\Sql\Join\Inner';
+        return $this;
+    }
+
+    public function cross() {
+        require_once 'Join/Cross.php';
+        $this->join = '\Sql\Join\Cross';
+        return $this;
+    }
+
+    public function left() {
+        require_once 'Join/Left.php';
+        $this->join = '\Sql\Join\Left';
+        return $this;
+    }
+
+    public function right() {
+        require_once 'Join/Right.php';
+        $this->join = '\Sql\Join\Right';
+        return $this;
+    }
+
+    public function join() {
+        $class = $this->join ?: '\Sql\Join';
+        unset($this->join);
+        return new $class($this, func_get_arg(0));
+    }
+
+    public function joins() {
+        $this->joins[] = func_get_arg(0);
+        return $this;
     }
 }
