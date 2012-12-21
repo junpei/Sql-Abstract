@@ -144,7 +144,7 @@ abstract class Sql
     public function count() {
         $table = $this->table ?: get_class($this);
         $alias = $this->alias ?: 'me';
-        $sql = "SELECT COUNT(*) FROM $table AS $alias";
+        $sql = "SELECT COUNT(*) AS count FROM $table AS $alias";
 
         /**
          * JOIN
