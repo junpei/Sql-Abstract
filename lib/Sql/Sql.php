@@ -235,6 +235,11 @@ abstract class Sql
 
     public function order($column, $order = null) {
         $order = (strtolower($order) === 'desc') ? 'DESC' : 'ASC';
+
+        if (preg_match('/\./', $column) === 0) {
+            $column = $this->alias() . ".$column";
+        }
+
         $this->orders[] = "$column $order";
         return $this;
     }
