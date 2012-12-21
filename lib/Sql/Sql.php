@@ -141,6 +141,28 @@ abstract class Sql
         return $sql;
     }
 
+    public function count() {
+        $table = $this->table ?: get_class($this);
+        $alias = $this->alias ?: 'me';
+        $sql = "SELECT COUNT(*) FROM $table AS $alias";
+
+        /**
+         * JOIN
+         */
+        if (count($this->joins) > 0) {
+            $sql .= ' ' . implode(' ', $this->joins);
+        }
+
+        /**
+         * WHERE
+         */
+        if (count($this->wheres) > 0) {
+            $sql .= sprintf(' WHERE (%s)', implode(' AND ', $this->wheres));
+        }
+
+        return $sql;
+    }
+
     public function selectOne() {
         return $this->limit(1)->offset(0)->select();
     }
