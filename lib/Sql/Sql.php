@@ -26,12 +26,12 @@ abstract class Sql
     }
 
     public function from() {
-        if (func_num_args() === 0) {
-            return $this->table;
+        if (func_num_args() === 1) {
+            $this->table = func_get_arg(0);
+            return $this;
         }
 
-        $this->table = func_get_arg(0);
-        return $this;
+        return $this->table ?: get_class($this);
     }
 
     public function alias() {
@@ -233,26 +233,15 @@ abstract class Sql
         return $this;
     }
 
-    public function set($column, $value) {
-        $this->sets[$column] = $value;
-        return $this;
-    }
-
-    public function sets($sets) {
-        foreach ($sets as $set) {
-            call_user_func_array(array($this, 'set'), $set);
+    public function set() {
+        if (func_num_args() === 2) {
+            list($column, $value) = func_get_args();
+            $this->sets[$column] = $value;
+            return $this;
         }
-        return $this;
-    }
 
-    public function update() {
-        $table = $this->table ?: get_class($this);
-        $sql = "UPDATE $table";
-
-        /**
-         * SET
-         */
         $sets = array();
+        $values = array();
 
         foreach ($this->sets as $column => $value) {
             if (is_null($value)) {
@@ -265,13 +254,28 @@ abstract class Sql
 
             else {
                 $sets[] = "$column = ?";
-                $this->values[] = $value;
+                $values[] = $value;
             }
         }
 
-        if (count($sets) > 0) {
-            $sql .= sprintf(' SET %s', implode(', ', $sets));
+        $this->values = array_merge($values, $this->values);
+
+        return sprintf('SET %s', implode(', ', $sets));
+    }
+
+    public function sets($sets) {
+        foreach ($sets as $set) {
+            call_user_func_array(array($this, 'set'), $set);
         }
+        return $this;
+    }
+
+    public function update() {
+        $sql = sprintf(
+            "UPDATE %s %s"
+            , $this->from()
+            , $this->set()
+        );
 
         /**
          * WHERE
@@ -302,7 +306,7 @@ abstract class Sql
         $values = array();
 
         /**
-         * SET
+         * INTO
          */
         foreach ($this->sets as $key => $value) {
             if (is_null($value)) {
