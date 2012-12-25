@@ -224,7 +224,7 @@ abstract class Sql
             }
         }
 
-        $this->wheres[] = implode(' OR ', $wheres);
+        $this->wheres[] = '(' . implode(' OR ', $wheres) . ')';
 
         return $this;
     }
