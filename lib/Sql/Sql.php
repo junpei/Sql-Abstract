@@ -20,6 +20,7 @@ abstract class Sql
     private $inserts = array();
     private $joins = array();
     private $join;
+    private $distinct;
 
     public function __construct() {
         return $this;
@@ -98,10 +99,11 @@ abstract class Sql
     }
 
     public function select() {
+        $select = ($this->distinct === true) ? 'SELECT DISTINCT' : 'SELECT';
         $columns = implode(', ', $this->columns) ?: '*';
         $table = $this->table ?: get_class($this);
         $alias = $this->alias ?: 'me';
-        $sql = "SELECT $columns FROM $table AS $alias";
+        $sql = "$select $columns FROM $table AS $alias";
 
         /**
          * JOIN
@@ -139,6 +141,11 @@ abstract class Sql
         }
 
         return $sql;
+    }
+
+    public function distinct() {
+        $this->distinct = true;
+        return $this;
     }
 
     public function count() {
