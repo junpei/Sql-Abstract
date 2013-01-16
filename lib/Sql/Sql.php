@@ -392,7 +392,7 @@ abstract class Sql
 
     public function join() {
         $class = $this->join ?: '\Sql\Join';
-        unset($this->join);
+        $this->join = null;
         return new $class($this, func_get_arg(0));
     }
 
