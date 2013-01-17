@@ -36,13 +36,19 @@ class Join
             $sql = "RIGHT OUTER $sql";
         }
 
+        if (preg_match('/\./', $from) === 0) {
+            $from = "{$this->left->alias()}.$from";
+        }
+
+        if (preg_match('/\./', $to) === 0) {
+            $to = "{$this->right->alias()}.$to";
+        }
+
         $sql .= sprintf(
-            ' %s AS %s ON (%s.%s = %s.%s)'
+            ' %s AS %s ON (%s = %s)'
             , $this->right->from()
             , $this->right->alias()
-            , $this->left->alias()
             , $from
-            , $this->right->alias()
             , $to
         );
 
