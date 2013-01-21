@@ -11,7 +11,7 @@ class Join
     protected $cross;
     protected $outer;
 
-    public function __construct(\Sql\Sql $left, \Sql\Sql $right) {
+    public function __construct(\Sql $left, \Sql $right) {
         $this->left = $left;
         $this->right = $right;
         return $this;

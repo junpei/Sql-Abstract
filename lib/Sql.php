@@ -1,9 +1,11 @@
 <?php
 
-namespace Sql;
-
-require_once 'Join.php';
-require_once 'Exception.php';
+require_once 'Sql/Join.php';
+require_once 'Sql/Join/Inner.php';
+require_once 'Sql/Join/Cross.php';
+require_once 'Sql/Join/Left.php';
+require_once 'Sql/Join/Right.php';
+require_once 'Sql/Exception.php';
 
 abstract class Sql
 {
@@ -367,25 +369,21 @@ abstract class Sql
     }
 
     public function inner() {
-        require_once 'Join/Inner.php';
         $this->join = '\Sql\Join\Inner';
         return $this;
     }
 
     public function cross() {
-        require_once 'Join/Cross.php';
         $this->join = '\Sql\Join\Cross';
         return $this;
     }
 
     public function left() {
-        require_once 'Join/Left.php';
         $this->join = '\Sql\Join\Left';
         return $this;
     }
 
     public function right() {
-        require_once 'Join/Right.php';
         $this->join = '\Sql\Join\Right';
         return $this;
     }
