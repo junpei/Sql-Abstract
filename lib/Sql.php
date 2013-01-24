@@ -200,6 +200,10 @@ abstract class Sql
             $this->wheres[] = sprintf("($column $op (%s))", implode(', ', $values));
         }
 
+        else if (is_null($value)) {
+            $this->wheres[] = "($column IS NULL)";
+        }
+
         else if (is_int($value)) {
             $this->wheres[] = "($column $op $value)";
         }
