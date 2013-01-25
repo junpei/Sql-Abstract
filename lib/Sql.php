@@ -24,7 +24,13 @@ abstract class Sql
     private $join;
     private $distinct;
 
-    public function __construct() {
+    public function __construct($settings = array()) {
+        foreach ($settings as $key => $value) {
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
+            }
+        }
+
         return $this;
     }
 
