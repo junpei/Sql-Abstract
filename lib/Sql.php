@@ -330,6 +330,13 @@ abstract class Sql
             $sql .= sprintf(' WHERE (%s)', implode(' AND ', $this->wheres));
         }
 
+        /**
+         * LIMIT
+         */
+        if ($this->limit > -1) {
+            $sql .= " LIMIT {$this->limit}";
+        }
+
         return $sql;
     }
 
@@ -342,6 +349,13 @@ abstract class Sql
          */
         if (count($this->wheres) > 0) {
             $sql .= sprintf(' WHERE (%s)', implode(' AND ', $this->wheres));
+        }
+
+        /**
+         * LIMIT
+         */
+        if ($this->limit > -1) {
+            $sql .= " LIMIT {$this->limit}";
         }
 
         return $sql;
