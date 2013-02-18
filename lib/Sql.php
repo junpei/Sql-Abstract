@@ -324,6 +324,13 @@ abstract class Sql
         );
 
         /**
+         * JOIN
+         */
+        if (count($this->joins) > 0) {
+            $sql .= ' ' . implode(' ', $this->joins);
+        }
+
+        /**
          * WHERE
          */
         if (count($this->wheres) > 0) {
