@@ -317,12 +317,7 @@ abstract class Sql
     }
 
     public function update() {
-        $sql = sprintf(
-            "UPDATE %s %s FROM %s"
-            , $this->from()
-            , $this->set()
-            , $this->from()
-        );
+        $sql = 'UPDATE ' . $this->from();
 
         /**
          * JOIN
@@ -330,6 +325,12 @@ abstract class Sql
         if (count($this->joins) > 0) {
             $sql .= ' ' . implode(' ', $this->joins);
         }
+
+        /**
+         * SET
+         */
+
+        $sql .= ' ' . $this->set();
 
         /**
          * WHERE
