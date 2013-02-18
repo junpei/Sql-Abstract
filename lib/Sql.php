@@ -318,9 +318,10 @@ abstract class Sql
 
     public function update() {
         $sql = sprintf(
-            "UPDATE %s %s"
+            "UPDATE %s %s FROM %s"
             , $this->from()
             , $this->set()
+            , $this->from()
         );
 
         /**
