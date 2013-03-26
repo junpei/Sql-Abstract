@@ -17,6 +17,7 @@ abstract class Sql
     private $wheres = array();
     private $values = array();
     private $orders = array();
+    private $groups = array();
     private $sets = array();
     private $columns = array();
     private $inserts = array();
@@ -122,6 +123,13 @@ abstract class Sql
          */
         if (count($this->wheres) > 0) {
             $sql .= sprintf(' WHERE (%s)', implode(' AND ', $this->wheres));
+        }
+
+        /**
+         * GROUP
+         */
+        if (count($this->groups) > 0) {
+            $sql .= sprintf(' GROUP BY %s', implode(', ', $this->groups));
         }
 
         /**
@@ -273,6 +281,15 @@ abstract class Sql
             throw new \Sql\Exception('not int.');
         }
         $this->offset = $n;
+        return $this;
+    }
+
+    public function group($column) {
+        if (preg_match('/\./', $column) === 0) {
+            $column = $this->alias() . ".$column";
+        }
+
+        $this->groups[] = $column;
         return $this;
     }
 
