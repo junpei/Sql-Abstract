@@ -18,6 +18,7 @@ abstract class Sql
     private $values = array();
     private $orders = array();
     private $groups = array();
+    private $havings = array();
     private $sets = array();
     private $columns = array();
     private $inserts = array();
@@ -130,6 +131,13 @@ abstract class Sql
          */
         if (count($this->groups) > 0) {
             $sql .= sprintf(' GROUP BY %s', implode(', ', $this->groups));
+        }
+
+        /**
+         * HAVING
+         */
+        if (count($this->havings) > 0) {
+            $sql .= sprintf(' HAVING %s', implode(' AND ', $this->havings));
         }
 
         /**
@@ -290,6 +298,33 @@ abstract class Sql
         }
 
         $this->groups[] = $column;
+        return $this;
+    }
+
+    public function having($column, $op, $value = null) {
+        if (is_null($value)) {
+            $value = $op;
+            $op = '=';
+        }
+
+        $function;
+        $matches = array();
+
+        if (preg_match('/^([^(]+)\(([^)]+)\)$/', $column, $matches)) {
+            $function = $matches[1];
+            $column   = $matches[2];
+        }
+
+        if (preg_match('/\./', $column) === 0) {
+            $column = $this->alias() . ".$column";
+        }
+
+        if (@$this->allows[$function]) {
+            $column = "$function($column)";
+        }
+
+        $this->havings[] = "($column $op $value)";
+
         return $this;
     }
 
