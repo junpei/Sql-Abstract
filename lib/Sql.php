@@ -24,6 +24,12 @@ abstract class Sql
     private $join;
     private $distinct;
 
+    private $allows = array(
+          'MIN' => true
+        , 'MAX' => true
+        , 'COUNT' => true
+    );
+
     public function __construct($settings = array()) {
         foreach ($settings as $key => $value) {
             if (property_exists($this, $key)) {
@@ -84,16 +90,7 @@ abstract class Sql
             $column = "{$this->alias}.$column";
         }
 
-        /**
-         * function
-         */
-        $allows = array(
-            'MIN' => true,
-            'MAX' => true,
-            'COUNT' => true,
-        );
-
-        if (@$allows[$function]) {
+        if (@$this->allows[$function]) {
             $column = "$function($column)";
         }
 
