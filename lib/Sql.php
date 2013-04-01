@@ -228,6 +228,10 @@ abstract class Sql
             $this->wheres[] = "($column $op $value)";
         }
 
+        else if ($value === 'NULL') {
+            $this->wheres[] = "($column $op $value)";
+        }
+
         else {
             $this->wheres[] = "($column $op ?)";
             $this->values[] = $value;
