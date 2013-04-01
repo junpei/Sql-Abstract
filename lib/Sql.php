@@ -27,7 +27,8 @@ abstract class Sql
     private $distinct;
 
     private $allows = array(
-          'MIN' => true
+          'IF' => true
+        , 'MIN' => true
         , 'MAX' => true
         , 'COUNT' => true
     );
