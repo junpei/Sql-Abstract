@@ -31,6 +31,7 @@ abstract class Sql
         , 'MIN' => true
         , 'MAX' => true
         , 'COUNT' => true
+        , 'DATE_FORMAT' => true
     );
 
     public function __construct($settings = array()) {
