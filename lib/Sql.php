@@ -283,10 +283,7 @@ abstract class Sql
     }
 
     public function limit($n) {
-        if (is_int($n) === false) {
-            throw new \Sql\Exception('not int.');
-        }
-        $this->limit = $n;
+        $this->limit = is_int($n) ? $n : null;
         return $this;
     }
 
