@@ -154,13 +154,13 @@ abstract class Sql
          */
         if ($this->limit > -1) {
             $sql .= " LIMIT {$this->limit}";
-        }
 
-        /**
-         * OFFSET
-         */
-        if ($this->offset > -1) {
-            $sql .= " OFFSET {$this->offset}";
+            /**
+             * OFFSET
+             */
+            if ($this->offset > -1) {
+                $sql .= " OFFSET {$this->offset}";
+            }
         }
 
         return $sql;
@@ -288,10 +288,7 @@ abstract class Sql
     }
 
     public function offset($n) {
-        if (is_int($n) === false) {
-            throw new \Sql\Exception('not int.');
-        }
-        $this->offset = $n;
+        $this->offset = is_int($n) ? $n : null;
         return $this;
     }
 
