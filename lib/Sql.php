@@ -366,10 +366,7 @@ abstract class Sql
     }
 
     public function update() {
-        $sql = sprintf('UPDATE %s FROM %s %s'
-            , $this->alias()
-            , $this->from()
-            , $this->alias());
+        $sql = sprintf('UPDATE %s %s', $this->from(), $this->alias());
 
         /**
          * JOIN
