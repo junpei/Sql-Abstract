@@ -32,6 +32,7 @@ abstract class Sql
         , 'MAX' => true
         , 'COUNT' => true
         , 'DATE_FORMAT' => true
+        , 'GROUP_CONCAT' => true
     );
 
     public function __construct($settings = array()) {
