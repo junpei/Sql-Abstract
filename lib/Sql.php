@@ -30,6 +30,7 @@ abstract class Sql
           'IF' => true
         , 'MIN' => true
         , 'MAX' => true
+        , 'SUM' => true
         , 'COUNT' => true
         , 'DATE_FORMAT' => true
         , 'GROUP_CONCAT' => true
